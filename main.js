@@ -207,3 +207,109 @@ window.addEventListener('keydown', (e) => {
     stop()
   }
 })
+
+const app = new Application({
+  width: 500,
+  height: 900,
+  direction: 'column',
+  content: [
+    {
+      key: 'grid',
+      width: 500,
+      height: 500,
+    },
+    {
+      key: 'manager',
+      direction: 'column',
+      width: 500,
+      height: 400,
+      content: [
+        {
+          key: 'controller',
+          width: 500,
+          height: 200,
+        },
+        {
+          width: 500,
+          height: 200,
+        },
+      ],
+    },
+  ],
+})
+
+app.getBox('grid').add(new Grid())
+
+// Graph
+class Box {
+  key = ''
+
+  width = 50
+  height = 50
+  side = 'left' // left right top bottom
+  content = []
+
+  constructor(params = {}) {
+    Object.assign(this, _pick(params, ['width', 'height', 'side']))
+  }
+
+  add(element) {
+    if (!this.content.includes(element)) {
+      this.content.push(element)
+    }
+  }
+}
+
+class Application extends Box {
+  constructor(params = {}) {
+    super({ key: 'application', ...params })
+
+    // Рекурсивно инициалзировать content
+  }
+}
+
+// BoxContent
+class Widget {}
+
+class Grid extends Widget {}
+
+class ActionsBar extends Widget {}
+
+class ControllerBar extends ActionsBar {}
+
+class TypesBar extends ActionsBar {}
+
+// Коллекция пассажей
+class PassagesBar extends ActionsBar {}
+
+// Кнопка
+class Action {}
+
+// Музыкальный патерн в 1 такт
+class Passage extends Action {}
+
+class Canvas {
+  element = document.createElement('canvas')
+  context = this.element.getContext('2d')
+}
+
+class Render {}
+
+class Draw {}
+
+const _has = (a, b) => Object.prototype.hasOwnProperty.call(a, b)
+
+const _pick = (obj, keys) =>
+  keys.reduce((r, key) => {
+    if (_has(obj, key)) {
+      r[key] = obj[key]
+    }
+
+    return r
+  }, {})
+
+const mixin = (currentClass, ...additionalClasses) => {
+  for (const additionalClass of additionalClasses) {
+    Object.assign(currentClass.prototype, additionalClass.prototype)
+  }
+}
